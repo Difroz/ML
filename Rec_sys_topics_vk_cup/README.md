@@ -4,8 +4,8 @@
 
 Так как работал с ограниченными ресурсами (16gb оперативной памяти) некоторые действия разбиты на отдельные файлы.  
 
-Решение задачи состояло из нескольких этапов:  
-* Подготовить данные для валидации  
-* Сформировать кандидатов ALS
-* Обучить модель Catboost Classifier
-* Сравнить метрики на глобальном test
+Решение задачи состояло из нескольких этапов:
+* [Посмотреть на исходные данные](https://github.com/Difroz/ML_projects/blob/main/Rec_sys_topics_vk_cup/EDA.ipynb)
+* [Подготовить данные для валидации](https://github.com/Difroz/ML_projects/blob/main/Rec_sys_topics_vk_cup/prepare_data.py)  
+* Сформировать кандидатов ALS 
+* [Обучить модель Catboost Classifier](https://github.com/Difroz/ML_projects/blob/main/Rec_sys_topics_vk_cup/CBC.ipynb)
