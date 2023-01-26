@@ -2,13 +2,13 @@ import pandas as pd
 from tools import split_data
 
 
-def split_data():
+def make_data():
     data = pd.read_parquet('files/vk_data/train.parquet.gzip')
     data = data.loc[data['timespent'] > 0]
     train_data, test_data = split_data(data, test_size=0.2)
 
-    train_data.to_parquet('files/train_full.parquet.gzip', compression='gzip')
-    test_data.to_parquet('files/test_full.parquet.gzip', compression='gzip')
+    train_data.to_parquet('files/global_full.parquet.gzip', compression='gzip')
+    test_data.to_parquet('files/global_full.parquet.gzip', compression='gzip')
 
 
 def make_features():
@@ -29,7 +29,18 @@ def make_features():
     user_features.columns = ['timespent_sum', 'time_spent_mean', 'reaction_sum', 'reaction_mean']
     user_features.loc[:, 'cou_posts'] = df.groupby('user_id')['item_id'].nunique().astype('int16')
 
+    item_features['source_id'] = item_features['source_id'].astype('category')
+    item_features['item_id'] = item_features['item_id'].astype('int32')
+    item_features['likes'] = item_features['likes'].astype('int32')
+    item_features['no_likes'] = item_features['no_likes'].astype('int32')
+    item_features['dislikes'] = item_features['dislikes'].astype('int32')
+
     item_features.to_parquet(path_item)
     user_features.to_parquet(path_user)
 
-make_features()
+
+if __name__ == '__main__':
+    print('make_data...')
+    make_data()
+    print('make_features....')
+    make_features()

@@ -66,7 +66,7 @@ def compute_metrics(df_true, df_pred, top_N, rank_col='rank'):
     test_recs = test_recs.sort_values(by=['user_id', rank_col])
 
     test_recs['users_item_count'] = test_recs.groupby(level='user_id')[rank_col].transform(np.size)
-    test_recs['reciprocal_rank'] = (1 / test_recs['rank']).fillna(0)
+    test_recs['reciprocal_rank'] = (1 / test_recs[rank_col]).fillna(0)
     test_recs['cumulative_rank'] = test_recs.groupby(level='user_id').cumcount() + 1
     test_recs['cumulative_rank'] = test_recs['cumulative_rank'] / test_recs[rank_col]
 
@@ -79,3 +79,9 @@ def compute_metrics(df_true, df_pred, top_N, rank_col='rank'):
     result[f'MAP@{top_N}'] = (test_recs["cumulative_rank"] / test_recs["users_item_count"]).sum() / users_count
     result[f'MRR'] = test_recs.groupby(level='user_id')['reciprocal_rank'].max().mean()
     return pd.Series(result)
+
+
+def get_rec_als(model, users, train_matrix, coder, N=100):
+    user_ids = coder.get_users(users)
+    rec, _ = model.recommend(user_ids, train_matrix, N=N, filter_already_liked_items=True)
+    return user_ids, [coder.get_items(items, how='val') for items in tqdm(rec)]
