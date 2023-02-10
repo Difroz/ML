@@ -4,11 +4,11 @@ from tools import split_data
 
 def make_data():
     data = pd.read_parquet('files/vk_data/train.parquet.gzip')
-    data = data.loc[data['timespent'] > 0]
+    #data = data.loc[data['timespent'] > 0]
     train_data, test_data = split_data(data, test_size=0.2)
 
-    train_data.to_parquet('files/global_full.parquet.gzip', compression='gzip')
-    test_data.to_parquet('files/global_full.parquet.gzip', compression='gzip')
+    train_data.to_parquet('files/global_train.parquet.gzip', compression='gzip')
+    test_data.to_parquet('files/global_test.parquet.gzip', compression='gzip')
 
 
 def make_features():

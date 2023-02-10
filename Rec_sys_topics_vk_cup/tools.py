@@ -81,7 +81,10 @@ def compute_metrics(df_true, df_pred, top_N, rank_col='rank'):
     return pd.Series(result)
 
 
-def get_rec_als(model, users, train_matrix, coder, N=100):
+def get_rec_als(model, users, train_matrix, coder, N=100, items=None):
     user_ids = coder.get_users(users)
-    rec, _ = model.recommend(user_ids, train_matrix, N=N, filter_already_liked_items=True)
+    if items:
+        rec, _ = model.recommend(user_ids, train_matrix, N=N, filter_already_liked_items=True, filter_items=items)
+    else:
+        rec, _ = model.recommend(user_ids, train_matrix, N=N, filter_already_liked_items=True)
     return user_ids, [coder.get_items(items, how='val') for items in tqdm(rec)]
